@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Forward Paint</string>
+    <string name="email">Адрес электронной почты</string>
+    <string name="password">Пароль</string>
+    <string name="registrationLog">Зарегистрироваться</string>
+    <string name="btnContinue">Войти</string>
+    <string name="rep_password">Повторите пароль</string>
+    <string name="lastname">Фамилия</string>
+    <string name="name">Имя</string>
+    <string name="registration">Зарегистрироваться</string>
+    <string name="employeeCode">Код сотрудника</string>
+    <string name="phoneNumber">Номер телефона</string>
+    <string name="numberOfOrder">Номер заказа</string>
+    <string name="typeOfOrder">Тип заказа</string>
+    <string name="price">Цена</string>
+    <string name="photo">Фотография</string>
+    <string name="create">Создать</string>
+</resources>
