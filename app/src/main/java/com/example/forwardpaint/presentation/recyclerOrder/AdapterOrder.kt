@@ -7,7 +7,7 @@ import com.example.forwardpaint.presentation.models.Order
 
 class AdapterOrder(
     private val onItemClickListener: OnItemClickListener
-) : RecyclerView.Adapter<OrderHolder>(){
+) : RecyclerView.Adapter<OrderHolder>() {
 
     private var dataList = mutableListOf<Order>()
 

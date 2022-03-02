@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "60032439837-j2h4ppvb7690o6n4a6688jlq0cascnl8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.forwardpaint",
+            "certificate_hash": "15580c9d60bb108d0edac82a13332c8334d02f0b"
+          }
+        },
+        {
           "client_id": "60032439837-2diungucnefnsuf6lmpck62olg8cqaph.apps.googleusercontent.com",
           "client_type": 3
         }

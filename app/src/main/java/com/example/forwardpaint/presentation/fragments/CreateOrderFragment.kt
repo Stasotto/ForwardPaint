@@ -10,7 +10,6 @@ import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
-import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.forwardpaint.R
@@ -18,6 +17,7 @@ import com.example.forwardpaint.databinding.FragmentCreateOrderBinding
 import com.example.forwardpaint.presentation.models.Order
 import com.example.forwardpaint.presentation.viewmodels.MainFragViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import java.io.ByteArrayOutputStream
 
 class CreateOrderFragment : Fragment(R.layout.fragment_create_order) {
 
@@ -29,29 +29,35 @@ class CreateOrderFragment : Fragment(R.layout.fragment_create_order) {
     private val binding by viewBinding(FragmentCreateOrderBinding::bind)
     private var launcher: ActivityResultLauncher<Intent>? = null
     private val vieModel by sharedViewModel<MainFragViewModel>()
-    private var imageBitmap: Bitmap? = null
+    private var im: ByteArray? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkPermissions()
-        launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
-            imageBitmap = result.data?.extras?.get("data") as Bitmap?
-            binding.image.setImageBitmap(imageBitmap)
-            binding.imageText.text = Editable.Factory.getInstance().newEditable(imageBitmap.toString())
-        }
+        launcher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                val bitmap = result.data?.extras?.get("data") as Bitmap?
+                val baos = ByteArrayOutputStream()
+                bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                im = baos.toByteArray()
+                binding.image.setImageBitmap(bitmap)
+                binding.imageText.text =
+                    Editable.Factory.getInstance().newEditable(bitmap.toString())
+            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.imageText.setOnClickListener {
             openCamera()
         }
         binding.btnCreateOrder.setOnClickListener {
-           vieModel.load(createOrder())
+            vieModel.saveOrder(createOrder(), im!!)
         }
     }
 
-    private fun createOrder(): Order  = with(binding) {
+    private fun createOrder(): Order = with(binding) {
         return Order(
             name = nameText.text.toString(),
             lastName = lastNameText.text.toString(),
@@ -59,13 +65,13 @@ class CreateOrderFragment : Fragment(R.layout.fragment_create_order) {
             numberOfOrder = numberOfOrderText.text.toString().toInt(),
             typeOfOrder = typeOfOrderText.text.toString(),
             price = priceText.text.toString().toInt(),
-            image = imageBitmap,
+            image = null,
             status = "Принят"
         )
     }
 
     private fun openCamera() {
-            launcher?.launch(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
+        launcher?.launch(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
     }
 
 
@@ -83,7 +89,10 @@ class CreateOrderFragment : Fragment(R.layout.fragment_create_order) {
         ) {
             ActivityCompat.requestPermissions(
                 requireActivity(),
-                arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                arrayOf(
+                    android.Manifest.permission.CAMERA,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+                ),
                 101
             )
         }

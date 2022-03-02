@@ -15,4 +15,8 @@
     <string name="price">Цена</string>
     <string name="photo">Фотография</string>
     <string name="create">Создать</string>
+    <string name="save">Сохранить</string>
+    <string name="edit">Редактировать</string>
+    <string name="editorder">редактирование</string>
+    <string name="as">Введите текст</string>
 </resources>

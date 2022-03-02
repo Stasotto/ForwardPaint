@@ -8,3 +8,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Forward Paint"
 include ':app'
+include ':domain'
+include ':data'

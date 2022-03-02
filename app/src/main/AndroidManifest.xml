@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -14,8 +15,9 @@
         android:theme="@style/Theme.ForwardPaint"
         android:name=".presentation.ForwardPaintApplication">
         <activity
-            android:name=".AuthorizationActivity"
+            android:name=".presentation.activities.AuthorizationActivity"
             android:exported="true"
+            android:noHistory="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.activities.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"/>
     </application>

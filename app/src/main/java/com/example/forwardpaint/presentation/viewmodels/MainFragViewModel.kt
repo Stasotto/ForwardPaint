@@ -3,46 +3,41 @@ package com.example.forwardpaint.presentation.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.domain.GetOrdersUseCase
+import com.example.domain.SaveOrderUseCase
 import com.example.forwardpaint.presentation.models.Order
+import com.example.forwardpaint.presentation.toOrder
+import com.example.forwardpaint.presentation.toOrderDomain
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
-class MainFragViewModel : ViewModel() {
+class MainFragViewModel(
+    private val getOrdersUseCase: GetOrdersUseCase,
+    private val saveOrderUseCase: SaveOrderUseCase
+) : ViewModel() {
 
     private val _orderForRecycler = MutableLiveData<List<Order>>()
     val orderForRecycler: LiveData<List<Order>> get() = _orderForRecycler
 
-    val order2 = MutableLiveData<Order>()
-
 
     init {
-        val list = listOf<Order>(
-            Order(
-                "Kiril",
-                "Berg",
-                375333339922,
-                1,
-                "Очистка",
-                222,
-                null,
-                "Принят"
-            ),
-
-            Order(
-                "Kiril",
-                "Berg",
-                375333339922,
-                7,
-                "Очистка",
-                555,
-                null,
-                "Принят"
-            )
-        )
-
-        _orderForRecycler.value = list
-
+        loadOrders()
     }
 
-    fun load(order: Order) {
-        order2.value = order
+    private fun loadOrders() {
+        viewModelScope.launch {
+            getOrdersUseCase.orders.collect { ordersList ->
+                _orderForRecycler.value = ordersList.map { orderDomain ->
+                    orderDomain.toOrder()
+                }
+            }
+        }
+    }
+
+    fun saveOrder(order: Order, imageBytes: ByteArray) {
+        viewModelScope.launch {
+            saveOrderUseCase.execute(order.toOrderDomain(), imageBytes)
+        }
     }
 }
